@@ -1,0 +1,88 @@
+LOJA_COLLECTION {
+    "_id":0,
+    "nome": "",
+    "url": "",
+    "jogos": [{ "j1": object_id, "j2": object_id}],
+}
+
+JOGO_COLLECTION {
+    "plataformas": [{"linux":1, "mac":1, "windows":1}],
+    "generos": [{"g1":"", "g2":""}],
+    "empresa": "nome",
+    "nome": "",
+    "requisitos_pc": {
+        "so": "",
+        "processador": "",
+        "memoria": 0,
+        "video": 0,
+        "som": "",
+        "armazenamento": 0,
+        "rede": ""
+    },
+    "requisitos_mac": {
+        "so": "",
+        "processador": "",
+        "memoria": 0,
+        "video": 0,
+        "som": "",
+        "armazenamento": 0,
+        "rede": ""
+    },
+    "requisitos_linux": {
+        "so": "",
+        "processador": "",
+        "memoria": 0,
+        "video": 0,
+        "som": "",
+        "armazenamento": 0,
+        "rede": ""
+    }
+}
+
+PUBLICACAO COLLECTIONS {
+    "jogo": id,
+    "loja": id,
+    "avaliacao":0,
+    "multimidia": [{"l1": "", "l2": ""}],
+    "idiomas": [{"id1":"", "id2":""}],
+    "preco": 0,
+    "data_pub": "00/00/0000",
+    "comentarios": [{
+        "usuario": "",
+        "recomendado": "",
+        "texto": "",
+        "reacoes": [{"nome_reacao":0, "nome_reacao2":0}],
+        "respostas":[{
+            "usuario": "",
+            "texto": ""
+        }]
+    }]
+}
+
+//Antigo abaixo
+GAME_STORES COLLECTION {
+    "_id": 0,
+    "nome": "",
+    "url": "",
+    "jogos": {
+        
+        "preco": "0",
+        "tipo_aquisicao": "",
+        "comentarios": [{
+            usuario: { 
+                nome: "",
+                id: ""
+            }
+            titulo: "",
+            corpo: "",
+            respostas: [{
+                usuario: {
+                    nome: "",
+                    id: 0
+                }
+                corpo: "",
+            }]
+        }]
+    }
+}
+
