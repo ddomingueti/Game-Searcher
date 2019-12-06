@@ -1,8 +1,8 @@
-LOJA_COLLECTION {
+Stores {
     "_id":0,
-    "nome": "",
+    "name": "",
     "url": "",
-    "jogos": [{ "j1": object_id, "j2": object_id}],
+    "publications": [{ "j1": object_id, "j2": object_id}],
 }
 
 JOGO_COLLECTION {
@@ -40,7 +40,9 @@ JOGO_COLLECTION {
 }
 
 PUBLICACAO COLLECTIONS {
-    "jogo": id,
+    "jogo": [{
+        
+    }],
     "loja": id,
     "avaliacao":0,
     "multimidia": [{"l1": "", "l2": ""}],
