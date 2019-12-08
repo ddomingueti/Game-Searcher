@@ -40,6 +40,19 @@ class Store implements JsonSerializable {
         }
     }
 
+    public function findByName($storeName) {
+        $storeDao = new StoreDao();
+        $result = $storeDao->findByName($storeName);
+        if (count($result) > 0) {
+            $this->setStoreId((string)$result[0]->_id);
+            $this->setName($result[0]->name);
+            $this->setUrl($result[0]->url);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function createInstance() {
         $storeDao = new StoreDao();
         $result = $storeDao->add($this);
