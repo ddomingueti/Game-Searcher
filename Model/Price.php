@@ -6,7 +6,7 @@ class Price implements JsonSerializable {
     private $currency;
     private $formated;
 
-    public function __construct($value, $currency, $formated) {
+    public function __construct($value="", $currency="", $formated="") {
         $this->setValue($value);
         $this->setCurrency($currency);
         $this->setFormated($formated);

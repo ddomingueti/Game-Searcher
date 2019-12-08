@@ -1,6 +1,7 @@
 <?php
 
 include_once "conexao.php";
+include_once "Store.php";
 
 class StoreDao {
 

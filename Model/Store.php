@@ -6,7 +6,7 @@ class Store implements JsonSerializable {
     private $url;
     private $storeId;
 
-    public function __construct($name, $url, $storeId) {
+    public function __construct($storeId="", $name="", $url="") {
         $this->name = $name;
         $this->url = $url;
         $this->storeId = 0;

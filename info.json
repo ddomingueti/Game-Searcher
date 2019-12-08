@@ -1,0 +1,23 @@
+{"1019511": {
+    "Data": ["dlc", "Far Cry\u00ae New Dawn - Hurk Legacy Pack", 0, false], 
+    "DetailedDescription": "O Hurk Legacy Pack inclui: <br />\r\n<br />\r\n- Skin &quot;Hurk's Wrath&quot; para a M249<br />\r\n- Skin Hurk Legacy Offroad<br />\r\n- Traje de Hurkling", 
+    "AboutTheGame": "O Hurk Legacy Pack inclui: <br />\r\n<br />\r\n- Skin &quot;Hurk's Wrath&quot; para a M249<br />\r\n- Skin Hurk Legacy Offroad<br />\r\n- Traje de Hurkling", 
+    "ShortDescription": "O Hurk Legacy Pack inclui: - Skin &quot;Hurk's Wrath&quot; para a M249 - Skin Hurk Legacy Offroad - Traje de Hurkling", 
+    "SupportedLanguages": "Ingl\u00eas<strong>*</strong>, Franc\u00eas<strong>*</strong>, Italiano<strong>*</strong>, Alem\u00e3o<strong>*</strong>, Espanhol (Espanha)<strong>*</strong>, \u00c1rabe, Checo, Holand\u00eas, Japon\u00eas<strong>*</strong>, Coreano, Polaco, Portugu\u00eas (Brasil)<strong>*</strong>, Russo<strong>*</strong>, Chin\u00eas simplificado, Chin\u00eas tradicional<br><strong>*</strong>idiomas com suporte \u00e1udio total", 
+    "HeaderImage": "https://steamcdn-a.akamaihd.net/steam/apps/1019511/header.jpg?t=1551718873", 
+    "Website": "https://far-cry.ubisoft.com/",
+    "PcRequirements": {
+        "minimum": "<strong>M\u00ednimos:</strong><br><ul class=\"bb_ul\"><li><strong>Sistema Operativo:</strong> Windows 7 SP1, Windows 8.1, Windows 10 (64bit versions only)<br></li><li><strong>Processador:</strong> Intel Core i5 2400 @ 3.1 GHz or AMD FX 6350 @ 3.9 GHz<br></li><li><strong>Mem\u00f3ria:</strong> 8 GB de RAM<br></li><li><strong>Placa gr\u00e1fica:</strong> NVIDIA GeForce GTX 670 (2GB) or AMD Radeon R9 270X (2GB) or better<br></li><li><strong>Espa\u00e7o no disco:</strong> Requer 30 GB de espa\u00e7o livre<br></li><li><strong>Placa de som:</strong> DirectX 9.0c compatible sound card with latest drivers<br></li><li><strong>Notas adicionais:</strong> PERIPHERALS: Windows-compatible keyboard, mouse, headset</li></ul>", 
+        "recommended": "<strong>Recomendados:</strong><br><ul class=\"bb_ul\"><li><strong>Sistema Operativo:</strong> Windows 7 SP1, Windows 8.1, Windows 10 (64bit versions only)<br></li><li><strong>Processador:</strong> Intel Core i7-4790 @ 3.6 GHz or AMD Ryzen 5 1600 @ 3.2 GHz<br></li><li><strong>Mem\u00f3ria:</strong> 8 GB de RAM<br></li><li><strong>Placa gr\u00e1fica:</strong> NVIDIA GeForce GTX 970 (4GB) or AMD Radeon R9 290X (4GB) or better<br></li><li><strong>Espa\u00e7o no disco:</strong> Requer 30 GB de espa\u00e7o livre<br></li><li><strong>Placa de som:</strong> DirectX 9.0c compatible sound card with latest drivers<br></li><li><strong>Notas adicionais:</strong> Windows-compatible keyboard, mouse, headset</li></ul>"
+        }, 
+    "MacRequirements": [], 
+    "LinuxRequirements": [], 
+    "Developers": "N\u00e3o possui Desenvolvedores cadastrados", 
+    "Prices": {"currency": "BRL", "initial": 1499, "final": 1499, "final_formatted": "R$ 14,99"}, 
+    "Platforms": ["windows"], "Metacritic": "N\u00e3o possui nota no metacritic", 
+    "Categories": ["Um jogador", "Co-op online", "Conte\u00fado Transfer\u00edvel", "Compat. parcial c/ comando"], 
+    "Genres": ["A\u00e7\u00e3o", "Aventura"], 
+    "Movies": "N\u00e3o possui", 
+    "Recommendations": "Jogo n\u00e3o possui recomenda\u00e7\u00f5es", 
+    "ReleaseDate": {"coming_soon": false, "date": "4 Mar, 2019"}
+}}
