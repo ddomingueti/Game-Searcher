@@ -43,54 +43,66 @@ class PublicationDao {
         $query = new MongoDB\Driver\Query([]);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
         $cursor = $cursor->toArray();
-        
-        $keys = array_keys($result);
-        $arr = $result[$keys[0]]; // get the incoming data
-        $store = new Store();
-        $storeId = $arr->storeId;
-        $store->findOne($storeId);
-        $reqs = [];
-        if (count($arr->PcRequirements) > 0) {   
-            array_push($reqs, new Requirements("Pc", $arr->PcRequirements->minimum, $arr->PcRequirements->recommended));
-        }
-        if (count($arr->LinuxRequirements) > 0) {
-            array_push($reqs, new Requirements("Linux", $arr->LinuxRequirements->minimum, $arr->LinuxRequirements->recomended));
-        }
-        if (count($arr->MacRequirements) > 0) {
-            array_push($reqs, new Requirements("Mac", $arr->MacRequirements->minimum, $arr->MacRequiriments->recomended));                
-        }
-
-        $game = new Game($arr->Data[0], $arr->Data[1], $arr->Data[2], $arr->Data[2], $arr->Developers, $arr->Genres, $reqs, $arr->Platforms, $arr->AboutTheGame);
-        
-        $prices = [];
-        if (count($arr->Prices) > 1) {
-            foreach ($arr->Prices as $element) {
-                $price = new Price($element->final, $element->currency, $element->formated);
-                array_push($prices, $price);
+        $pubs = [];
+        foreach ($cursor as $element) {
+            $keys = array_keys($result);
+            $arr = $element[$keys[0]]; // get the incoming data
+            if (isset($arr->PcRequirements) && count($arr->PcRequirements) > 0) {   
+                array_push($reqs, new Requirements("Pc", $arr->PcRequirements->minimum, $arr->PcRequirements->recommended));
             }
-        } else {
-            $prices = new Price($arr->Prices->final, $arr->Prices->currency, $arr->Prices->final_formatted);
+            if (isset($arr->LinuxRequirements) && count($arr->LinuxRequirements) > 0) {
+                array_push($reqs, new Requirements("Linux", $arr->LinuxRequirements->minimum, $arr->LinuxRequirements->recomended));
+            }
+            if (count(isset($arr->MacRequirements) && $arr->MacRequirements) > 0) {
+                array_push($reqs, new Requirements("Mac", $arr->MacRequirements->minimum, $arr->MacRequiriments->recomended));                
+            }
+            
+            $game = new Game($arr->Data[0], $arr->Data[1], $arr->Data[2], $arr->Data[2], $arr->Developers, $arr->Genres, $reqs, $arr->Platforms, $arr->AboutTheGame);
+            
+            $prices = [];
+            if (isset($arr->Prices)) {
+                if (count($arr->Prices) > 1) {
+                    foreach ($arr->Prices as $element) {
+                        $price = new Price($element->final, $element->currency, $element->formated);
+                        array_push($prices, $price);
+                    }
+                } else {
+                    $prices = new Price($arr->Prices->final, $arr->Prices->currency, $arr->Prices->final_formatted);
+                }
+            }
+
+            $resources = [];
+            
+            $resoures["HeaderImage"] = isset($arr->HeaderImage) ? $arr->HeaderImage : "";
+            $resources["Screenshots"] = isset($arr->Screenshot) ? $arr->Screenshot : "Não há screenshots cadastradas.";
+            $resources["Movies"] = isset($arr->Movies) ? $arr->Movies : "";
+            $releaseDate = "";
+            if (isset($arr->ReleaseDate)) {
+                $releaseDate = new ReleaseDate($arr->ReleaseDate->coming_soon, $arr->ReleaseDate->date);
+            }
+            $pub = new Publication();
+            $pub->setGame($game);
+            $pub->setPrice($prices);
+            $pub->setResources($resources);
+            $pub->setPubDate($releaseDate);
+            $pub->setStore($store);
+            $pub->setWebsite($arr->Website);
+            if (isset($arr->DetailedDescription))
+                $pub->setDetailedDescription($arr->DetailedDescription);
+            if (isset($arr->ShortDescription))
+                $pub->setShortDescription($arr->ShortDescription);
+            if (isset($arr->SupportedLanguages))
+                $pub->setLanguages($arr->SupportedLanguages);
+            if (isset($arr->Metacritic))
+                $pub->setMetacritic($arr->Metacritic);
+            if (isset($arr->Categories))
+                $pub->setCategories($arr->Categories);
+            if (isset($arr->Recommendations))   
+                $pub->setRecomendations($arr->Recommendations);
+            $pub->_id = $_id;
+            array_push($pubs, $pub);
         }
-
-        $resources = [];
-        $resoures["HeaderImage"] = $arr->HeaderImage;
-        $resources["Screenshots"] = isset($arr->Screenshot) ? $arr->Screenshot : "Não há screenshots cadastradas.";
-        $resources["Movies"] = $arr->Movies;
-
-        $releaseDate = new ReleaseDate($arr->ReleaseDate->coming_soon, $arr->ReleaseDate->date);
-        $this->setGame($game);
-        $this->setPrice($prices);
-        $this->setResources($resources);
-        $this->setPubDate($releaseDate);
-        $this->setStore($store);
-        $this->setWebsite($arr->Website);
-        $this->setDetailedDescription($arr->DetailedDescription);
-        $this->setShortDescription($arr->ShortDescription);
-        $this->setLanguages($arr->SupportedLanguages);
-        $this->setMetacritic($arr->Metacritic);
-        $this->setCategories($arr->Categories);
-        $this->setRecomendations($arr->Recommendations);
-        $this->_id = $_id;
+        return $pubs;
     }
 
 }

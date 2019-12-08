@@ -88,46 +88,58 @@ class Publication implements JsonSerializable {
 
             $reqs = [];
 
-            if (count($arr->PcRequirements) > 0) {   
+            if (isset($arr->PcRequirements) && count($arr->PcRequirements) > 0) {   
                 array_push($reqs, new Requirements("Pc", $arr->PcRequirements->minimum, $arr->PcRequirements->recommended));
             }
-            if (count($arr->LinuxRequirements) > 0) {
+            if (isset($arr->LinuxRequirements) && count($arr->LinuxRequirements) > 0) {
                 array_push($reqs, new Requirements("Linux", $arr->LinuxRequirements->minimum, $arr->LinuxRequirements->recomended));
             }
-            if (count($arr->MacRequirements) > 0) {
+            if (count(isset($arr->MacRequirements) && $arr->MacRequirements) > 0) {
                 array_push($reqs, new Requirements("Mac", $arr->MacRequirements->minimum, $arr->MacRequiriments->recomended));                
             }
-
+            
             $game = new Game($arr->Data[0], $arr->Data[1], $arr->Data[2], $arr->Data[2], $arr->Developers, $arr->Genres, $reqs, $arr->Platforms, $arr->AboutTheGame);
             
             $prices = [];
-            if (count($arr->Prices) > 1) {
-                foreach ($arr->Prices as $element) {
-                    $price = new Price($element->final, $element->currency, $element->formated);
-                    array_push($prices, $price);
+            if (isset($arr->Prices)) {
+                if (count($arr->Prices) > 1) {
+                    foreach ($arr->Prices as $element) {
+                        $price = new Price($element->final, $element->currency, $element->formated);
+                        array_push($prices, $price);
+                    }
+                } else {
+                    $prices = new Price($arr->Prices->final, $arr->Prices->currency, $arr->Prices->final_formatted);
                 }
-            } else {
-                $prices = new Price($arr->Prices->final, $arr->Prices->currency, $arr->Prices->final_formatted);
             }
 
             $resources = [];
-            $resoures["HeaderImage"] = $arr->HeaderImage;
+            
+            $resoures["HeaderImage"] = isset($arr->HeaderImage) ? $arr->HeaderImage : "";
             $resources["Screenshots"] = isset($arr->Screenshot) ? $arr->Screenshot : "Não há screenshots cadastradas.";
-            $resources["Movies"] = $arr->Movies;
+            $resources["Movies"] = isset($arr->Movies) ? $arr->Movies : "";
+            $releaseDate = "";
+            if (isset($arr->ReleaseDate)) {
+                $releaseDate = new ReleaseDate($arr->ReleaseDate->coming_soon, $arr->ReleaseDate->date);
+            }
 
-            $releaseDate = new ReleaseDate($arr->ReleaseDate->coming_soon, $arr->ReleaseDate->date);
             $this->setGame($game);
             $this->setPrice($prices);
             $this->setResources($resources);
             $this->setPubDate($releaseDate);
             $this->setStore($store);
             $this->setWebsite($arr->Website);
-            $this->setDetailedDescription($arr->DetailedDescription);
-            $this->setShortDescription($arr->ShortDescription);
-            $this->setLanguages($arr->SupportedLanguages);
-            $this->setMetacritic($arr->Metacritic);
-            $this->setCategories($arr->Categories);
-            $this->setRecomendations($arr->Recommendations);
+            if (isset($arr->DetailedDescription))
+                $this->setDetailedDescription($arr->DetailedDescription);
+            if (isset($arr->ShortDescription))
+                $this->setShortDescription($arr->ShortDescription);
+            if (isset($arr->SupportedLanguages))
+                $this->setLanguages($arr->SupportedLanguages);
+            if (isset($arr->Metacritic))
+                $this->setMetacritic($arr->Metacritic);
+            if (isset($arr->Categories))
+                $this->setCategories($arr->Categories);
+            if (isset($arr->Recommendations))   
+                $this->setRecomendations($arr->Recommendations);
             $this->_id = $_id;
             return true;
         } else {
