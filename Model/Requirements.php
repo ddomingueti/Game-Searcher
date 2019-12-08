@@ -1,12 +1,14 @@
 <?php
 
-class Requirements  implements JsonSerialize {
+class Requirements implements JsonSerializable {
     private $platform;
     private $minimum;
     private $recommended;
 
-    public function __construct($platform, $minimum, $recommended) {
-        
+    public function __construct($platform="", $minimum="", $recommended="") {
+        $this->setPlatform($platform);
+        $this->setMiminum($minimum);
+        $this->setRecommended($recommended);
     }
 
     public function setPlatform($value) { $this->platform = $value; }

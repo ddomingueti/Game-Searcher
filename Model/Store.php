@@ -4,12 +4,12 @@ include_once "StoreDao.php";
 class Store implements JsonSerializable {
     private $name;
     private $url;
-    private $storeId;
+    private $_id;
 
-    public function __construct($storeId="", $name="", $url="") {
+    public function __construct($__id="", $name="", $url="") {
         $this->name = $name;
         $this->url = $url;
-        $this->storeId = 0;
+        $this->_id = $__id;
     }
 
     public function getName() { return $this->name; }
@@ -18,8 +18,8 @@ class Store implements JsonSerializable {
     public function getUrl() { return $this->url; }
     public function setUrl($value) { $this->url = $value; }
 
-    public function getStoreId() { return $this->storeId; }
-    public function setStoreId($value) { $this->storeId = $value; }
+    public function getStoreId() { return $this->_id; }
+    public function setStoreId($value) { $this->_id = $value; }
 
     public function findAll() {
         $storeDao = new StoreDao();
@@ -28,11 +28,10 @@ class Store implements JsonSerializable {
     }
 
     public function findOne($__id) {
-        $this->setStoreId($__id);
         $storeDao = new StoreDao();
         $result = $storeDao->findOne($__id);
         if (count($result) > 0) {
-            $this->setStoreId($result[0]->__id);
+            $this->setStoreId((string)$result[0]->_id);
             $this->setName($result[0]->name);
             $this->setUrl($result[0]->url);
             return true;
@@ -60,17 +59,9 @@ class Store implements JsonSerializable {
     }
 
     public function jsonSerialize() {
-        $arr_pub = [];
-        if ($this->publications != null) {
-            for ($i = 0; $i < count($this->publications); $i++) {
-                $arr_pub.push($publications[$i].jsonSerialize());
-            }
-        }
         return [
-            'storeId' => $this->getStoreId(),
             'name' => $this->getName(),
             'url' => $this->getUrl(),
-            'publications' => $arr_pub,
         ];
     }
 }

@@ -1,5 +1,5 @@
 <?php
-include_once "conexao.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/conexao.php";
 
 class GameDao {
 

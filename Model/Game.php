@@ -12,7 +12,7 @@ class Game implements JsonSerializable {
     private $platforms; // string array
     private $aboutGame; // string
 
-    public function __construct($type="", $name="", $minumumAge="", $isFree="", $developer="", $genres="", $requiriments="", $platforms="", $about="") {
+    public function __construct($type="", $name="", $minumumAge="", $isFree="", $developer="", $genres="", $requirements="", $platforms="", $about="") {
         $this->setName($name);
         $this->setDeveloper($developer);
         $this->setGenres($genres);
@@ -21,7 +21,7 @@ class Game implements JsonSerializable {
         $this->setType($type);
         $this->setMinimumAge($minumumAge);
         $this->setIsFree($isFree);
-        $this->setAbout($about);
+        $this->setAboutGame($about);
     }
 
     public function setName($value) { $this->name = $value; }

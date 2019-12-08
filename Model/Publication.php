@@ -3,6 +3,7 @@
 include_once "Game.php";
 include_once "Price.php";
 include_once "Store.php";
+include_once "Requirements.php";
 include_once "ReleaseDate.php";
 include_once "PublicationDao.php";
 
@@ -20,24 +21,26 @@ class Publication implements JsonSerializable {
     private $store; // store object
     private $website; // string
     private $categories; //string array
-    private $__id; //string
+    private $recomendations; //string
+    private $_id; //string
     
 
-    public function __construct($game="", $prices="", $store="", $resources="", $detailed="", $short="", $languages="", $website="", $categories="", $metacritic="", $releaseData="") {
+    public function __construct($game="", $prices="", $store="", $resources="", $detailed="", $short="", $languages="", $website="", $categories="", $metacritic="", $releaseDate="", $recomendations="") {
         $this->setGame($game);
         $this->setStore($store);
-        $this->setPrice($price);
+        $this->setPrice($prices);
         $this->setResources($resources);
         $this->setLanguages($languages);
         $this->setCategories($categories);
         $this->setWebsite($website);
-        $this->setPubDate($date);
+        $this->setPubDate($releaseDate);
         $this->setMetacritic($metacritic);
         $this->setDetailedDescription($detailed);
         $this->setShortDescription($short);
+        $this->setRecomendations($recomendations);
     }
 
-    public function setGame($value) { $this->gameName = $value; }
+    public function setGame($value) { $this->game = $value; }
     public function setStore($value) { $this->store = $value; }
     public function setResources($value) { $this->resources = $value; }
     public function setLanguages($value) { $this->languages = $value; }
@@ -49,6 +52,7 @@ class Publication implements JsonSerializable {
     public function setDetailedDescription($value) { $this->detailedDescription = $value; }
     public function setCategories($value) { $this->categories = $value; }
     public function setWebsite($value) { $this->website = $value; }
+    public function setRecomendations($value) { $this->recomendations = $value; }
 
     public function getGame() { return $this->game; }
     public function getStore() { return $this->store; }
@@ -62,6 +66,7 @@ class Publication implements JsonSerializable {
     public function getDetailedDescription() { return $this->detailedDescription; }
     public function getWebsite() { return $this->website; }
     public function getCategories() { return $this->categories; }
+    public function getRecomendations() { return $this->recomendations; }
 
     public function createInstance() {
         $publicationDao = new PublicationDao();
@@ -69,53 +74,61 @@ class Publication implements JsonSerializable {
         return $result;
     }
 
-    public function findOne($__id) {
+    public function findOne($_id) {
         $publicationDao = new PublicationDao();
 
-        $result = $publicationDao()->findOne($__id);
+        $result = $publicationDao->findOne($_id);
         if (count($result) == 1) {
-
+            
             $keys = array_keys($result);
             $arr = $result[$keys[0]]; // get the incoming data
-           
             $store = new Store();
-            $store->findOne($arr["storeId"]);
+            $storeId = $arr->storeId;
+            $store->findOne($storeId);
 
             $reqs = [];
-            if (count($arr["PcRequirements"]) > 0) {   
-                array_push($reqs, new Requirements("Pc", $arr["PcRequirements"]["minimum"], $arr["PcRequirements"]["recomended"]));
+
+            if (count($arr->PcRequirements) > 0) {   
+                array_push($reqs, new Requirements("Pc", $arr->PcRequirements->minimum, $arr->PcRequirements->recommended));
             }
-            if (count($arr["LinuxRequirements"]) > 0) {
-                array_push($reqs, new Requirements("Linux", $arr["LinuxRequirements"]["minimum"], $arr["LinuxRequirements"]["recomended"]));
+            if (count($arr->LinuxRequirements) > 0) {
+                array_push($reqs, new Requirements("Linux", $arr->LinuxRequirements->minimum, $arr->LinuxRequirements->recomended));
             }
-            if (count($arr["MacRequirements"]) > 0) {
-                array_push($reqs, new Requirements("Mac", $arr["MacRequirements"]["minimum"], $arr["MacRequiriments"]["recomended"]));                
+            if (count($arr->MacRequirements) > 0) {
+                array_push($reqs, new Requirements("Mac", $arr->MacRequirements->minimum, $arr->MacRequiriments->recomended));                
             }
 
-            $game = new Game($arr["Data"][0], $arr["Data"][1], $arr["Data"][2], $arr["Data"][2], $arr["Developers"], $arr["Genres"], $reqs, $arr["Platforms"], $arr["AboutTheGame"]);
+            $game = new Game($arr->Data[0], $arr->Data[1], $arr->Data[2], $arr->Data[2], $arr->Developers, $arr->Genres, $reqs, $arr->Platforms, $arr->AboutTheGame);
+            
             $prices = [];
-            foreach ($arr["Prices"] as $element) {
-                $price = new Price($element["final"], $element["currency"], $element["formated"]);
-                array_push($prices, $price);
+            if (count($arr->Prices) > 1) {
+                foreach ($arr->Prices as $element) {
+                    $price = new Price($element->final, $element->currency, $element->formated);
+                    array_push($prices, $price);
+                }
+            } else {
+                $prices = new Price($arr->Prices->final, $arr->Prices->currency, $arr->Prices->final_formatted);
             }
 
             $resources = [];
-            $resoures["HeaderImage"] = $arr["HeaderImage"];
-            $resources["Screenshots"] = $arr["Screenshots"];
-            $resources["Movies"] = $arr["Movies"];
+            $resoures["HeaderImage"] = $arr->HeaderImage;
+            $resources["Screenshots"] = isset($arr->Screenshot) ? $arr->Screenshot : "Não há screenshots cadastradas.";
+            $resources["Movies"] = $arr->Movies;
 
-            $releateDate = new ReleaseDate($arr["coming_soon"], $arr["date"]);
+            $releaseDate = new ReleaseDate($arr->ReleaseDate->coming_soon, $arr->ReleaseDate->date);
             $this->setGame($game);
             $this->setPrice($prices);
             $this->setResources($resources);
             $this->setPubDate($releaseDate);
             $this->setStore($store);
-            $this->setWebsite($arr["Website"]);
-            $this->setDetailedDescription($arr["DetailedDescription"]);
-            $this->setShortDescription($arr["ShortDescription"]);
-            $this->setLanguages($arr["SupportedLanguages"]);
-            $this->setMetacritic($arr["Metacritic"]);
-            $this->setCategories($arr["Categories"]);
+            $this->setWebsite($arr->Website);
+            $this->setDetailedDescription($arr->DetailedDescription);
+            $this->setShortDescription($arr->ShortDescription);
+            $this->setLanguages($arr->SupportedLanguages);
+            $this->setMetacritic($arr->Metacritic);
+            $this->setCategories($arr->Categories);
+            $this->setRecomendations($arr->Recommendations);
+            $this->_id = $_id;
             return true;
         } else {
             return false;
@@ -127,7 +140,6 @@ class Publication implements JsonSerializable {
         $gameData = $this->getGame()->jsonSerialize();
         $priceData = $this->getPrice()->jsonSerialize();
         $dateData = $this->getPubDate()->jsonSerialize();
-
         $pubData = [
             "DetailedDescription" => $this->getDetailedDescription(),
             "ShortDescription" => $this->getShortDescription(),
@@ -140,7 +152,7 @@ class Publication implements JsonSerializable {
             "Screenshots" => $this->getResources["Screenshots"] != null ? $this->getResources["Screenshots"] : [],
             "storeId" => $this->getStore()->getStoreId(),
         ];
-
+        
         return array_merge($gameData, $pubData, $dateData);
     }
 }

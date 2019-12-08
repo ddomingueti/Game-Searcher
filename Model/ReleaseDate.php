@@ -1,6 +1,6 @@
 <?php
 
-class ReleaseDate implements jsonSerialize {
+class ReleaseDate implements JsonSerializable {
     private $comingSoon;
     private $date;
 

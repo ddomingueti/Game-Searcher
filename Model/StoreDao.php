@@ -1,6 +1,6 @@
 <?php
 
-include_once "conexao.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/conexao.php";
 include_once "Store.php";
 
 class StoreDao {
@@ -10,12 +10,11 @@ class StoreDao {
         $bulk = new MongoDB\Driver\BulkWrite;
         $_id = $bulk->insert($data);
         $result = Conexao::getInstance()->getManager()->executeBulkWrite(Conexao::getDbName().'.stores', $bulk);
-        var_dump($result);
         return ($result->getInsertedCount() == 1);
     }
 
     public function remove($storeId) {
-        $data = ["__id" => $storeId, ];
+        $data = ["_id" => $storeId, ];
         $bulk = new MongoDB\Driver\BulkWrite;
         $bulk->delete($data);
         $result = Conexao::getInstance()->getManager()->executeBulkWrite(Conexao::getDbName().'.stores', $bulk);
@@ -43,7 +42,7 @@ class StoreDao {
     }
 
     public function findOne($__id) {
-        $data = ["__id" => $__id];
+        $data = ["_id" => new MongoDB\BSON\ObjectID($__id)];
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.stores', $query);
         $cursor = $cursor->toArray();

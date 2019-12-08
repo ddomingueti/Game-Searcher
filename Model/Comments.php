@@ -1,7 +1,7 @@
 <?php
 include_once "CommentsDao.php";
 
-class Comments implements JsonSerialize {
+class Comments implements JsonSerializable {
 
     private $username;
     private $userId;
@@ -17,7 +17,7 @@ class Comments implements JsonSerialize {
     public function __construct($username="", $userId="", $recommendation="", $date="", $avatar="", $hours="", $review="", $pub_id="") {
         $this->setUsername($username);
         $this->setUserId($userId);
-        $this->setRecommendation($recomentation);
+        $this->setRecommendation($recommendation);
         $this->setDate($date);
         $this->setAvatar($avatar);
         $this->setHours($hours);
@@ -50,7 +50,7 @@ class Comments implements JsonSerialize {
 
     public function createInstance($pubId) {
         $commentsDao = new CommentsDao();
-        $this->setPubId($pubId);
+        $this->setPubId((string) new MongoDB\BSON\ObjectID($pubId));
         $result = $commentsDao->add($this);
         return $result;
     }
@@ -66,7 +66,7 @@ class Comments implements JsonSerialize {
             $this->setRecommendation($result[0]->recommendation);
             $this->setDate($result[0]->date);
             $this->setReview($result[0]->review);
-            $this->setStorageId($result[0]->__id);
+            $this->setStorageId((string)$result[0]->_id);
             return true;
         } else {
             return false;

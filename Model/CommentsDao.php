@@ -1,20 +1,30 @@
 <?php
 
-include_once "conexao.php";
-include_once "Commments.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/conexao.php";
+include_once "Comments.php";
 
 class CommentsDao {
-    public function add($comentObject) {
-        $data = $comentObject->jsonSerialize();
+    public function add($commentObject, $pubId="") {
+        $data = [];
+        if (gettype($commentObject) == "object") {
+            $data = $commentObject->jsonSerialize();
+        } else {
+            $data = $commentObject;
+        }
+
+        if ($pubId !== "") {
+            $data['pubId'] = $pubId;
+        }
+        
         $bulk = new MongoDB\Driver\BulkWrite;
         $_id = $bulk->insert($data);
-        $result = Conexao::getInstance()->getManager()->executeBulkWrite(Conexao::getDbName().'.stores', $bulk);
+        $result = Conexao::getInstance()->getManager()->executeBulkWrite(Conexao::getDbName().'.comments', $bulk);
         var_dump($result);
         return ($result->getInsertedCount() == 1);
     }
 
-    public function findOne($pubId, $__id) {
-        $data = ["pub_id" => $pubId, "__id" => $__id, ];
+    public function findOne($pubId, $_id) {
+        $data = ["_id" => new MongoDB\BSON\ObjectID($_id), ];
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
         $cursor = $cursor->toArray();
@@ -40,7 +50,7 @@ class CommentsDao {
     }
 
     public function findByPubId($id) {
-        $data = ["pub_id" => $id];
+        $data = ["pub_id" => new MongoDB\BSON\ObjectID($id)];
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
         $cursor = $cursor->toArray();
@@ -48,7 +58,7 @@ class CommentsDao {
     }
 
     public function findByUsername($username) {
-        $data = ["username" => $username, ];
+        $data = ["user" => $username, ];
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments.user', $query);
         $cursor = $cursor->toArray();
