@@ -10,7 +10,7 @@ class Comments implements JsonSerializable {
     private $avatar;
     private $hours;
     private $responses;
-    private $__id;
+    private $_id;
     private $pub_id;
     private $review;
 
@@ -35,7 +35,7 @@ class Comments implements JsonSerializable {
     public function setHours($value) { $this->hours = $value; }
     public function setDate($value) {$this->date = $value; }
     public function setPubId($value) {$this->pub_id = $value; }
-    public function setStorageId($value) { $this->__id = $value; }
+    public function setStorageId($value) { $this->_id = $value; }
 
     public function getUsername($value) { return $this->username; }
     public function getUserId($value) { return $this->userId; }
@@ -55,9 +55,9 @@ class Comments implements JsonSerializable {
         return $result;
     }
 
-    public function findOne($__id) {
+    public function findOne($_id) {
         $commentsDao = new CommentsDao();
-        $result = $commentsDao->findOne($this);
+        $result = $commentsDao->findOne($_id);
         if (count($result) == 1) {
             $this->setUsername($result[0]->user);
             $this->setUserId($result[0]->steam_id);

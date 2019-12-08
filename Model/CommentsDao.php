@@ -19,11 +19,10 @@ class CommentsDao {
         $bulk = new MongoDB\Driver\BulkWrite;
         $_id = $bulk->insert($data);
         $result = Conexao::getInstance()->getManager()->executeBulkWrite(Conexao::getDbName().'.comments', $bulk);
-        var_dump($result);
         return ($result->getInsertedCount() == 1);
     }
 
-    public function findOne($pubId, $_id) {
+    public function findOne($_id) {
         $data = ["_id" => new MongoDB\BSON\ObjectID($_id), ];
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
@@ -40,7 +39,8 @@ class CommentsDao {
         if (count($cursor) > 0) {
             $final_comments = [];
             foreach ($cursor as $element) {
-                $comment = new Comment($element->user, $element->steam_id, $element->recommendation, $element->date, $element->avatar, $element->hours, $element->review, $pubId);
+                $comment = new Comments($element->user, $element->steam_id, $element->recommendation, $element->date, $element->avatar, $element->hours, $element->review, $element->pubId);
+                $comment->setStorageId((string)$element->_id);
                 array_push($final_comments, $comment);                
             }
             return $final_comments; 

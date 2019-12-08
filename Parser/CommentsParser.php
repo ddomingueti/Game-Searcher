@@ -4,7 +4,8 @@
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/conexao.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Comments.php";
 
-$comment = new Comments();
+$comment = new CommentsDao();
+
 
 $json = file_get_contents("$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Data/Page1Reviews.json", true);
 $json = json_decode($json, true);
