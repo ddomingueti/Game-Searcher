@@ -5,12 +5,7 @@ include_once "conexao.php";
 class StoreDao {
 
     public function add($storeObject) {
-        $data = [
-            "name" => $store->getName(),
-            "url" => $store->getUrl(),
-            "publications" => $store->getPublications(),
-        ];
-
+        $data = $storeObject->jsonSerialize();
         $bulk = new MongoDB\Driver\BulkWrite;
         $_id = $bulk->insert($data);
         $result = Conexao::getInstance()->getManager()->executeBulkWrite(Conexao::getDbName().'.stores', $bulk);
@@ -20,7 +15,6 @@ class StoreDao {
 
     public function remove($storeId) {
         $data = ["__id" => $storeId, ];
-
         $bulk = new MongoDB\Driver\BulkWrite;
         $bulk->delete($data);
         $result = Conexao::getInstance()->getManager()->executeBulkWrite(Conexao::getDbName().'.stores', $bulk);
@@ -30,8 +24,7 @@ class StoreDao {
     public function update($storeObject) {
         $condition = ["name" => $storeObject->getName(), ];
         $values = ["set" => [ "name" => $storeObject->getName(), 
-                             "url" => $storeObject->url, 
-                             "publications" => $storeObject->getPublications(),
+                             "url" => $storeObject->url,
                             ],
                  ];
         $bulk = new MongoDB\Driver\BulkWrite;
@@ -45,7 +38,14 @@ class StoreDao {
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.stores', $query);
         $cursor = $cursor->toArray();
-        
+        return $cursor;
+    }
+
+    public function findOne($__id) {
+        $data = ["__id" => $__id];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.stores', $query);
+        $cursor = $cursor->toArray();
         return $cursor;
     }
 
@@ -54,25 +54,13 @@ class StoreDao {
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.stores', $query);
         $cursor = $cursor->toArray();
-        return $cursor;
-    }
 
-    public function findByPublication($pubId) { 
-        $data = ["publication.__id" => $pubId, ];
-        $query = new MongoDB\Driver\Query($data);
-        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.stores', $query);
-        $cursor = $cursor->toArray();
-        return $cursor;
-    }
-
-    public function findByGamePublication($gameId) {
-        $data = [ "publication.game" => $gameId, ];
-        $query = new MongoDB\Driver\Query($data);
-        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.stores', $query);
-        $cursor = $cursor->toArray();
-        var_dump($cursor);
-        
-        return $cursor;
+        $resultData = [];
+        foreach ($cursor as $element) {
+            $store = new Store($element->name, $element->url);
+            array_push($resultData, $store);
+        }
+        return $resultData;
     }
 
 }
