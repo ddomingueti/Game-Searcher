@@ -39,7 +39,7 @@ class CommentsDao {
     }
 
     public function findByPubId($id) {
-        $data = ["pub_id" => new MongoDB\BSON\ObjectID($id)];
+        $data = ["pub_id" => $id];
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
         $cursor = $cursor->toArray();
