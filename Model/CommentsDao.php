@@ -29,7 +29,6 @@ class CommentsDao {
         $cursor = $cursor->toArray();
         return $cursor;
     }
-    
 
     public function findAll() {
         $data = [];
@@ -70,4 +69,5 @@ class CommentsDao {
         }
         return $final_comments;
     }
+    
 }

@@ -23,12 +23,19 @@ class PublicationDao {
     }
 
     public function findByStore($storeId) {
-        
+        $data = ["storeId" => new Mongo\BSON\ObjectID($storeId),];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
+        $cursor = $cursor->toArray();
+        return $this->cursorToPubList($cursor);
     }
 
     public function findByGameName($gamename) {
-
-        return $cursor;
+        $data = ["Data.[1]" => $gamename,];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
+        $cursor = $cursor->toArray();
+        return $this->cursorToPubList($cursor);
     }
 
     public function findOne($pubId) { 
@@ -43,6 +50,23 @@ class PublicationDao {
         $query = new MongoDB\Driver\Query([]);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
         $cursor = $cursor->toArray();
+        $pub_list = $this->cursorToPubList($cursor);
+        return $pub_list;
+    }
+
+    public function customQueryPublication($jsonQuery) {
+        $query = new MongoDB\Driver\Query($jsonQuery);
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
+        $cursor = $cursor->toArray();
+        return $this->cursorToPubList($cursor);
+    }
+
+    public function findByCategories($categories) {
+        
+    }
+
+    public function cursorToPubList($cursor) {
         $pubs = [];
         foreach ($cursor as $element) {
             $keys = array_keys($result);
@@ -103,6 +127,6 @@ class PublicationDao {
             array_push($pubs, $pub);
         }
         return $pubs;
-    }
 
+    }
 }
