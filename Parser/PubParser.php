@@ -2,22 +2,51 @@
 
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/conexao.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Publication.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Comments.php";
+
+function addInfoSteam($path, $storeId) {
+    $json = file_get_contents($path, true);
+    $json = json_decode($json, true);
+    $keys = array_keys($json);
+    $json = $json[$keys[0]];
+    $json['numSearches'] = 0;
+    $pubDao = new PublicationDao();
+    $id = $pubDao->add($json, $storeId);
+    return $id;
+}
+
+function addCommentSteam($path, $pubId) {    
+    $json = file_get_contents($path, true);
+    $json = json_decode($json, true);
+    $commentDao = new CommentsDao();
+    foreach ($json as $element) {
+        $commentDao->add($element, $pubId);    
+    }
+}
 
 $store = new Store("", "", "");
-//$store->createInstance();
+$r = $store->findByName('Steam'); //steam id
+$base_path = "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Data/Daniel";
+$cont = 1;
+$d = dir($base_path);
+$pub_id = "";
+while (false !== ($entry = $d->read())) {
+   if ($entry == "." || $entry == "..") continue;
+    var_dump($cont);
+   if (is_dir($base_path."/".$entry)) {
+        $child = dir($base_path."/".$entry);
+        while (false !== ($childEntry = $child->read())) {
+            if ($childEntry == "." || $childEntry == "..") continue;
+            
+            if ($childEntry == "info.json") {
+                $pub_id = addInfoSteam($child->path."/".$childEntry, $store->getStoreId());
+            }
+            else addCommentSteam($child->path."/".$childEntry, $pub_id);
+        }
+        $child->close();
+   }
+   $cont = $cont + 1;
+}
 
-$r = $store->findOne('5ded6077256e0000500057ad');
-
-$publication = new Publication();
-$r = $publication->findOne('5ded6262256e0000500057ae');
-var_dump($r);
-var_dump($publication);
-
-/*
-$json = file_get_contents("$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Data/info.json", true);
-$json = json_decode($json, true);
-$keys = array_keys($json);
-$json = $json[$keys[0]];
-$pubDao = new PublicationDao();
-$pubDao->add($json, $store->getStoreId());
-*/
+$d->close();
+echo 'A --- C --- A --- B --- O --- U ';

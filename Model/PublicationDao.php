@@ -19,7 +19,7 @@ class PublicationDao {
         $bulk = new MongoDB\Driver\BulkWrite;
         $_id = $bulk->insert($data);
         $result = Conexao::getInstance()->getManager()->executeBulkWrite(Conexao::getDbName().'.publications', $bulk);
-        return ($result->getInsertedCount() == 1);
+        return (string)$_id;
     }
 
     public function findByStore($storeId) {
@@ -72,16 +72,29 @@ class PublicationDao {
     public function cursorToPubList($cursor) {
         $pubs = [];
         foreach ($cursor as $element) {
-            $keys = array_keys($result);
-            $arr = $element[$keys[0]]; // get the incoming data
-            if (isset($arr->PcRequirements) && count($arr->PcRequirements) > 0) {   
-                array_push($reqs, new Requirements("Pc", $arr->PcRequirements->minimum, $arr->PcRequirements->recommended));
+            $keys = array_keys($cursor);
+            $arr = $element; // get the incoming data
+            $reqs = [];
+            if (isset($arr->PcRequirements) && count($arr->PcRequirements) > 0) {
+                $minimum = "";
+                $recommended = "";
+                if (isset($arr->PcRequirements->minimum)) $minimum = $arr->PcRequirements->minimum;
+                if (isset($arr->PcRequirements->recommended)) $recommended = $arr->PcRequirements->recommended;
+                array_push($reqs, new Requirements("Pc", $minimum, $recommended));
             }
             if (isset($arr->LinuxRequirements) && count($arr->LinuxRequirements) > 0) {
-                array_push($reqs, new Requirements("Linux", $arr->LinuxRequirements->minimum, $arr->LinuxRequirements->recomended));
+                $minimum = "";
+                $recommended = "";
+                if (isset($arr->LinuxRequirements->minimum)) $minimum = $arr->LinuxRequirements->minimum;
+                if (isset($arr->LinuxRequirements->recommended)) $recommended = $arr->LinuxRequirements->recommended;
+                array_push($reqs, new Requirements("Linux",$minimum, $recommended));
             }
             if (count(isset($arr->MacRequirements) && $arr->MacRequirements) > 0) {
-                array_push($reqs, new Requirements("Mac", $arr->MacRequirements->minimum, $arr->MacRequiriments->recomended));                
+                $minimum = "";
+                $recommended = "";
+                if (isset($arr->MacRequirements->minimum)) $minimum = $arr->MacRequirements->minimum;
+                if (isset($arr->MacRequirements->recommended)) $recommended = $arr->MacRequirements->recommended;
+                array_push($reqs, new Requirements("Mac", $minimum, $recommended));                
             }
             
             $game = new Game($arr->Data[0], $arr->Data[1], $arr->Data[2], $arr->Data[2], $arr->Developers, $arr->Genres, $reqs, $arr->Platforms, $arr->AboutTheGame);
@@ -107,6 +120,9 @@ class PublicationDao {
             if (isset($arr->ReleaseDate)) {
                 $releaseDate = new ReleaseDate($arr->ReleaseDate->coming_soon, $arr->ReleaseDate->date);
             }
+            $store = new Store();
+            $store->findOne($arr->storeId);
+
             $pub = new Publication();
             $pub->setGame($game);
             $pub->setPrice($prices);
@@ -126,7 +142,11 @@ class PublicationDao {
                 $pub->setCategories($arr->Categories);
             if (isset($arr->Recommendations))   
                 $pub->setRecomendations($arr->Recommendations);
-            $pub->_id = $_id;
+            
+            if (isset($arr->numSearches))
+                $pub->setNumSearches($arr->numSearches);
+
+            $pub->setPublicationId($arr->_id);
             array_push($pubs, $pub);
         }
         return $pubs;

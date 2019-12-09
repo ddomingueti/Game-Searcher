@@ -22,6 +22,7 @@ class Publication implements JsonSerializable {
     private $website; // string
     private $categories; //string array
     private $recomendations; //string
+    private $numSearches; // number of searches
     private $_id; //string
     
 
@@ -38,6 +39,7 @@ class Publication implements JsonSerializable {
         $this->setDetailedDescription($detailed);
         $this->setShortDescription($short);
         $this->setRecomendations($recomendations);
+        $this->numSearches = 0;
     }
 
     public function setGame($value) { $this->game = $value; }
@@ -53,6 +55,8 @@ class Publication implements JsonSerializable {
     public function setCategories($value) { $this->categories = $value; }
     public function setWebsite($value) { $this->website = $value; }
     public function setRecomendations($value) { $this->recomendations = $value; }
+    public function setNumSearches($value) { $this->numSearches = $value; }
+    public function setPublicationId($value) { $this->_id = $value; }
 
     public function getGame() { return $this->game; }
     public function getStore() { return $this->store; }
@@ -67,6 +71,8 @@ class Publication implements JsonSerializable {
     public function getWebsite() { return $this->website; }
     public function getCategories() { return $this->categories; }
     public function getRecomendations() { return $this->recomendations; }
+    public function getNumSearches() { return $this->numSearches; }
+    public function getPublicationId() { return $this->_id; }
 
     public function createInstance() {
         $publicationDao = new PublicationDao();
@@ -163,6 +169,7 @@ class Publication implements JsonSerializable {
             "Movies" => $this->getResources()["Movies"] != null ? $this->getResources["Movies"] : [],
             "Screenshots" => $this->getResources["Screenshots"] != null ? $this->getResources["Screenshots"] : [],
             "storeId" => $this->getStore()->getStoreId(),
+            "numSearches" => $this->numSearches,
         ];
         
         return array_merge($gameData, $pubData, $dateData);
