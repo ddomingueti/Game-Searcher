@@ -14,12 +14,12 @@ class CommentController {
 
     public function findById($id) {
         $r = $this->comment->findOne($id);
-        return $r;
+        return count($r) > 0;
     }
 
     public function findByPubId($pubId) {
         $r = $this->comment->findByPubId($pubId);
-        return $r;
+        return count($r) > 0;
     }
 
     public function findAll() {

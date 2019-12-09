@@ -35,17 +35,7 @@ class CommentsDao {
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
         $cursor = $cursor->toArray();
-        if (count($cursor) > 0) {
-            $final_comments = [];
-            foreach ($cursor as $element) {
-                $comment = new Comments($element->user, $element->steam_id, $element->recommendation, $element->date, $element->avatar, $element->hours, $element->review, $element->pubId);
-                $comment->setStorageId((string)$element->_id);
-                array_push($final_comments, $comment);                
-            }
-            return $final_comments; 
-        } else { 
-            return null;
-        }
+        return $this->cursorToCommentList($cursor);
     }
 
     public function findByPubId($id) {
@@ -53,7 +43,8 @@ class CommentsDao {
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
         $cursor = $cursor->toArray();
-        return $cursor;
+
+        return $this->cursorToCommentList($cursor);
     }
 
     public function findByUsername($username) {
@@ -62,12 +53,16 @@ class CommentsDao {
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments.user', $query);
         $cursor = $cursor->toArray();
         
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function cursorToCommentList($cursor) {
         $final_comments = [];
         foreach ($cursor as $element) {
-            $comment = new Comments($element->username, $element->reactions, $element->text, $element->title);
-            array_push($final_comments, $comment);
+            $comment = new Comments($element->user, $element->steam_id, $element->recommendation, $element->date, $element->avatar, $element->hours, $element->review, $element->pubId);
+            $comment->setStorageId((string)$element->_id);
+            array_push($final_comments, $comment);                
         }
-        return $final_comments;
+        return $final_comments; 
     }
-    
 }
