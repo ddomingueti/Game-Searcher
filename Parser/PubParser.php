@@ -24,6 +24,7 @@ function addCommentSteam($path, $pubId) {
     }
 }
 
+
 $store = new Store("", "", "");
 $r = $store->findByName('Steam'); //steam id
 $base_path = "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Data/Daniel";
@@ -32,7 +33,6 @@ $d = dir($base_path);
 $pub_id = "";
 while (false !== ($entry = $d->read())) {
    if ($entry == "." || $entry == "..") continue;
-    var_dump($cont);
    if (is_dir($base_path."/".$entry)) {
         $child = dir($base_path."/".$entry);
         while (false !== ($childEntry = $child->read())) {
@@ -49,4 +49,5 @@ while (false !== ($entry = $d->read())) {
 }
 
 $d->close();
+
 echo 'A --- C --- A --- B --- O --- U ';

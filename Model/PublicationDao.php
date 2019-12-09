@@ -23,7 +23,7 @@ class PublicationDao {
     }
 
     public function findByStore($storeId) {
-        $data = ["storeId" => new Mongo\BSON\ObjectID($storeId),];
+        $data = ["storeId" => $storeId,];
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
         $cursor = $cursor->toArray();
@@ -107,7 +107,14 @@ class PublicationDao {
                         array_push($prices, $price);
                     }
                 } else {
-                    $prices = new Price($arr->Prices->final, $arr->Prices->currency, $arr->Prices->final_formatted);
+                    $currency = "";
+                    $final_formatted = "";
+                    $final = "";
+                    if (isset($arr->Prices->final)) $final = $arr->Prices->final;
+                    if (isset($arr->Prices->currency)) $currency = $arr->Prices->currency;
+                    if (isset($arr->Prices->final_formatted)) $final_formatted = $arr->Prices->final_formatted;
+                    if ($currency == "" && $final_formatted == "" && $final = "") $final_formatted = $arr->Prices;
+                    $prices = new Price($final, $currency, $final_formatted);
                 }
             }
 
