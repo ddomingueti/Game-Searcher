@@ -31,7 +31,7 @@ class PublicationDao {
     }
 
     public function findByGameName($gamename) {
-        $data = ["Data.1" => $gamename,];
+        $data = ['Data.1' => new MongoDB\BSON\Regex('/'.$gamename.'/')];
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
         $cursor = $cursor->toArray();
@@ -54,19 +54,20 @@ class PublicationDao {
         return $pub_list;
     }
 
-    public function customQueryPublication($jsonQuery) {
-        $query = new MongoDB\Driver\Query($jsonQuery);
-        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
-        $cursor = $cursor->toArray();
-        return $this->cursorToPubList($cursor);
-    }
-
-    public function findByGenres($genres) {
+    public function findByGenres($genre1, $genre2, $genre3) {
         $data = [];
         $query = new MongoDB\Driver\Query($jsonQuery);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
         $cursor = $cursor->toArray();
         return $this->cursorToPubList($cursor);        
+    }
+
+    public function findByVisited() {
+        $data = [];
+        $query = new MongoDB\Driver\Query($data, ['sort' => ['numSearches'=>1]]);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
+        $cursor = $cursor->toArray();
+        return $this->cursorToPubList($cursor);
     }
 
     public function cursorToPubList($cursor) {

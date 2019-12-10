@@ -20,7 +20,13 @@ class PublicationController {
     public function findGameName($gameName) {
         $publicationDao = new PublicationDao();
         $this->publication = $publicationDao->findByGameName($gameName);
-        return true;
+        return (count($this->publication) > 0);
+    }
+
+    public function findVisitedPubs() {
+        $publicationDao = new PublicationDao();
+        $this->publication = $publicationDao->findByVisited();
+        return (count($this->publication) > 0);
     }
 
     public function customSearch($gameName, $pubType, $minAge, $developer, $genres, $categories, $storeName, $languages, $priceMin, $priceMax, $pubDate, $hasMetacritic, $recomendations) {

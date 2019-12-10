@@ -1,3 +1,17 @@
+<?php
+
+include "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Controller/PublicationController.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/PublicationDao.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Publication.php";
+
+if (isset($_POST)) {
+
+    $controller = new PublicationController();
+    $res = false;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +22,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Agency - Start Bootstrap Theme</title>
+  <title>GS - Resultados da busca</title>
 
   <!-- Bootstrap core CSS -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -56,12 +70,22 @@
         </div>
       </div>
       <div class="row text-center">
-
         	<div class="container">
+            <?php 
+                if (!$res) {
+                    echo "<h1>Nenhum resultado encontrado. Tente fazer outra busca.</h1>";
+                } else {
+            ?>
         		<div class="w-layout-grid project-details-grid" style= "text-align: left">
 
-        			<div class="list-group">
-                <li> <a href="game_result.html" class="list-group-item list-group-item-action list-group-item-light">Read Dead Redemption 2</a></li> <!-- Botar os resultados da consulta --> 
+        		<div class="list-group">
+                <?php
+                    foreach ($controller->getPublication() as $publication) {
+                        echo '<li> <a href="game_result.php?id='.$publication->getPublicationId().'" class="list-group-item list-group-item-action list-group-item-light">Read Dead Redemption 2</a></li>';
+                    }
+                }
+                ?>
+                 <!-- Botar os resultados da consulta --> 
         				<li> <a href="game_result.html" class="list-group-item list-group-item-action list-group-item-light">GTA V </a></li>
                 <li> <a href="game_result.html" class="list-group-item list-group-item-action list-group-item-light">CoD MW3</a></li>
                 <li> <a href="game_result.html" class="list-group-item list-group-item-action list-group-item-light">BF1</a></li>
@@ -70,7 +94,7 @@
 
         		</div>
 
-        </div>
+            </div>
 
       </div>
     </div>
@@ -81,7 +105,7 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-4">
-          <span class="copyright">Copyright &copy; Your Website 2019</span>
+          <span class="copyright">Copyright &copy; Game Searcher 2019</span>
         </div>
         <div class="col-md-4">
           

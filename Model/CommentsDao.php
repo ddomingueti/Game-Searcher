@@ -47,6 +47,42 @@ class CommentsDao {
         return $this->cursorToCommentList($cursor);
     }
 
+    public function findSteamComments($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function findGogComments($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function findByPubIdRecent($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data, ['sort' => ['date'=>1]]);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function findByPubIdOld($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data, ['sort' => ['date'=>-1]]);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }
+
     public function findByUsername($username) {
         $data = ["user" => $username, ];
         $query = new MongoDB\Driver\Query($data);
