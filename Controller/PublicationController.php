@@ -29,30 +29,23 @@ class PublicationController {
         return (count($this->publication) > 0);
     }
 
-    public function customSearch($gameName, $pubType, $minAge, $developer, $genres, $categories, $storeName, $languages, $priceMin, $priceMax, $pubDate, $hasMetacritic, $recomendations) {
+    public function customSearch($gen1, $gen2, $gen3, $pubType, $dev, $priceMin, $priceMax) {
         $query = [];
-        if (isset($gameName))
-            $query['Data.[1]'] = $gameName;
         if (isset($pubType))
             $query["Data.[0]"] = $pubType;
-        if (isset($minAge))
-            $query["Data.[2]"] = $minAge;
         if (isset($developer))
-            $query["Developers"] = $developer;
+            $query["Developers"] = new MongoDB\BSON\Regex("/".$developer."/");
         if (isset($genre))
-            $query["Genres"] = $genres;
-        if (isset($categories))
-            $query["Categories"] = $categories;
-        if (isset($storeName)) {
-            $store = new Store();
-            $store->findByName($storeName);
-            $query["storeId"] = $store->getStoreId();
+            $query["Genres"] = array("in" => array($gen1, $gen2, $gen3));
+        if (isset($priceMin) && isset($priceMax)) {
+            $data["Price.final"] = [ array ("gte" => $priceMin), array("lte" => $priceMax) ];
+        } else if (isset($priceMin) && !isset($priceMax)) {
+            $data["Price.final"] = array("gte" => $priceMin);
+        } else {
+            $data["Price.final"] = array("lte" => $priceMax);
         }
-        if (isset($languages))
-            $query["Languages"] = $languages;
         
         $pubDao = new PublicationDao();
         $this->publication = $pubDao->customQueryPublication($query);
-        
     }
 }

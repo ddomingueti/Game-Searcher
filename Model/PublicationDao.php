@@ -38,12 +38,27 @@ class PublicationDao {
         return $this->cursorToPubList($cursor);
     }
 
+    public function findByPrice($min, $max) {
+        $data["Price.final"] = [ array ("gte" => $min), array("lte" => $max) ];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
+        $cursor = $cursor->toArray();
+        return $this->cursorToPubList($cursor);
+    }
+
     public function findOne($pubId) { 
         $data = ["_id" => new MongoDB\BSON\ObjectID($pubId), ];
         $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
         $cursor = $cursor->toArray();
         return $cursor;
+    }
+
+    public function customQuery($data) {
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
+        $cursor = $cursor->toArray();
+        return $this->cursorToPubList($cursor);
     }
 
     public function findAll() {
@@ -55,8 +70,8 @@ class PublicationDao {
     }
 
     public function findByGenres($genre1, $genre2, $genre3) {
-        $data = [];
-        $query = new MongoDB\Driver\Query($jsonQuery);
+        $data["Genres"] = array("in" => array($gen1, $gen2, $gen3));
+        $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
         $cursor = $cursor->toArray();
         return $this->cursorToPubList($cursor);        
@@ -67,6 +82,7 @@ class PublicationDao {
         $query = new MongoDB\Driver\Query($data, ['sort' => ['numSearches'=>1]]);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
         $cursor = $cursor->toArray();
+
         return $this->cursorToPubList($cursor);
     }
 

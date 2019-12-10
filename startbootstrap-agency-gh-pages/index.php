@@ -122,23 +122,22 @@ $r = $controller->findVisitedPubs();
         </div>
 
         <div class="form-row">
-          <div class="col">
             <div class="form-row">
-            	<div class="col-md-12">
-              	<label class="input-text" >Preço Min</label>
-              </div>
-            	<div class="col-md-6">
-              	<input type="text" class="form-control" placeholder="Apenas Números">
-              </div>
+            	<div class="col-md-8">
+                  <label class="input-text" >Preço Mínimo</label>
+                </div>
+            	<div class="col-md-8">
+              	    <input name="precoMinimo" type="text" class="form-control" placeholder="Apenas Números">
+                </div>
+            </div>
           </div>
-          </div>
-          <div class="col">
-          	<div class="form-row">
-            	<div class="col-md-6">
-            		<label class="input-text" >Preço Max</label>
+        
+          <div class="form-row">
+            	<div class="col-md-8">
+            		<label class="input-text" >Preço Máximo</label>
           		</div>
-          		<div class="col-md-6">
-            		<input type="text" class="form-control" placeholder="Apenas Números">
+          		<div class="col-md-8">
+            		<input name="precoMaximo" type="text" class="form-control" placeholder="Apenas Números">
             	</div>
             </div>
           </div>
