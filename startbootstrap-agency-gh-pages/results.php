@@ -10,37 +10,22 @@ if (isset($_POST)) {
 
     $controller = new PublicationController();
     $res = false;
+
+    $genero1 = isset($_POST['genero1']) ? $_POST['genero1'] : "";
+    $genero2 = isset($_POST['genero2']) ? $_POST['genero2'] : "";
+    $genero3 = isset($_POST['genero3']) ? $_POST['genero3'] : "";
+    $tipo_pub = isset($_POST['tipo_publicacao']) ? $_POST['tipo_publicacao'] : "";
+    $dev = isset($_POST['dev']) ? $_POST['dev'] : "";
+    $precoMin = isset($_POST['precoMinimo']) ? $_POST['precoMinimo'] : "";
+    $precoMax = isset($_POST['precoMaximo']) ? $_POST['precoMaximo'] : "";
+    $pesquisaPrincipal = isset($_POST['pesquisaPrincipal']) ? $_POST['pesquisaPrincipal'] : "";
+
+    if ($pesquisaPrincipal !== "") {
+        $res = $controller->findGameName($pesquisaPrincipal);
+    } else {
+        $res = $controller->customSearch($genero1, $genero2, $genero3, $tipo_pub, $dev, $precoMin, $precoMax);
+    }
 }
-
-if(isset($_POST['genero1'])){
-  $res = $controller->customSearch($S_POST['genero1'], null, null, null, null, null, null);
-}elseif(isset($S_POST['genero2'])){
-  $res = $controller->customSearch(null, $S_POST['genero2'], null, null, null, null, null);
-}else if(isset($S_POST['genero3'])){
-   $res = $controller->customSearch(null, null,  $S_POST['genero3'], null, null, null, null);
-}elseif(isset($S_POST['tipo_publicacao']))
-  $res = $controller->customSearch(null, null,  null, $S_POST['tipo_publicacao'], null, null, null);
-}elseif(isset($S_POST['dev'])){
-  $res = $controller->customSearch(null, null,  null, null,  $S_POST['dev'], null, null);
-}elseif(isset($S_POST['precoMinimo'])){
-  $res = $controller->customSearch(null, null,  null, null,  null, $S_POST['precoMinimo'], null);
-}elseif (isset($S_POST['precoMaximo'])) {
-  $res = $controller->customSearch(null, null,  null, null,  null, null, $S_POST['precoMaximo']);
-}elseif(isset($S_POST['pesquisaPrincipal'])){
-  $res = $controller->findGameName($S_POST['pesquisaPrincipal']);
-}
-
-if($res){
-
-  for(int $i=0; i<count($controller->getPublication); $i++){
-
-    echo "<td><center><a href='change.php?id="$controller->getPublication[$i]->getPublication()"'>Alterar</a></center></td>";
-  }
-}else{
-
-  echo "Busca não encontrada";
-}
-    
 
 ?>
 
@@ -113,17 +98,10 @@ if($res){
         		<div class="list-group">
                 <?php
                     foreach ($controller->getPublication() as $publication) {
-                        echo '<li> <a href="game_result.php?id='.$publication->getPublicationId().'" class="list-group-item list-group-item-action list-group-item-light">Read Dead Redemption 2</a></li>';
+                        echo '<li> <a href="game_result.php?id='.$publication->getPublicationId().'" class="list-group-item list-group-item-action list-group-item-light">'.$publication->getGame()->getName().'</a></li>';
                     }
                 }
                 ?>
-                 <!-- Botar os resultados da consulta --> 
-        				<li> <a href="game_result.html" class="list-group-item list-group-item-action list-group-item-light">GTA V </a></li>
-                <li> <a href="game_result.html" class="list-group-item list-group-item-action list-group-item-light">CoD MW3</a></li>
-                <li> <a href="game_result.html" class="list-group-item list-group-item-action list-group-item-light">BF1</a></li>
-                <li> <a href="game_result.html" class="list-group-item list-group-item-action list-group-item-light">Cyberpunk 2077 Keanu Reeves</a></li>
-                <li> <a href="game_result.html" class="list-group-item list-group-item-action list-group-item-light">Need For Speed Heat</a></li>
-
         		</div>
 
             </div>
