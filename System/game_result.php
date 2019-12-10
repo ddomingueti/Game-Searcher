@@ -1,3 +1,38 @@
+<?php
+
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Controller/PublicationController.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Publication.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Controller/CommentController.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Comments.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Controller/StoreController.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Store.php";
+
+if(isset($_GET)){
+
+	$controller = new PublicationController();
+	$controller2 = new CommentsController();
+	$r = $controller->findPublication($GET['id']);
+
+	$name = $controller->getPublication()->getGame()->getName();
+	$store = $controller->getPublication()->getGame()->getStore();
+	$resources = $controller->getPublication()->getGame()->getResources();
+	$price = $controller->getPublication()->getGame()->getPrice()->getFormated();
+	$pubDate = $controller->getPublication()->getGame()->getPubDate();
+	$shortDescription = $controller->getPublication()->getGame()->getShortDescription();
+	$minimumAge = $controller->getPublication()->getName()->getMinimumAge();
+	$isFree = $controller->getPublication()->getGame()->getIsFree();
+	$type = $controller->getPublication()->getGame()->getType();
+	$developers = $controller->getPublication()->getGame()->getDeveloper();
+	$genres = $controller->getPublication()->getGame()->getGenres();
+	$requirements =  $controller->getPublication()->getGame()->getRequirements();
+	$platforms = $controller->getPublication()->getGame()->getPlatforms();
+	$aboutGame = $controller->getPublication()->getGame()->getAboutGame();
+
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,8 +86,8 @@
   <header class="masthead">
     <div class="container">
       <div class="intro-text">
-      	<div class="intro-heading text-uppercase">Red Dead Redemption</div>
-        <div class="intro-lead-in">By Rockstar Games</div>
+      	<?php echo '<div class="intro-heading text-uppercase">'.$name.'</div>' ?>
+        <?php echo '<div class="intro-lead-in">'.$store.'</div>' ?>
       </div>
     </div>
   </header>
@@ -65,14 +100,22 @@
         	<div class="container">
         		<div class="w-layout-grid project-details-grid" style= "text-align: left">
         			<h1>Características</h1>
-        			<ul>
-                <li>Gênero: </li>
-        				<li>Modo: </li>
-        				<li>Desenvolvedor: </li>
-        				<li>Preço: </li>
-        				<li>Disponível na Steam: Sim </li>
-        				<li>Disponível na GOG: Não </li>
-        			</ul>
+        			<?php
+	        			echo '<ul>
+	        				<li>Nome: '.$name.'</li>
+	                		<li>Gênero: '.$genres.'</li>
+	                		<li>Idade Mínima: '.$minimumAge.'</li>
+	        				<li>Data de Publicação: '.$pubDate.'</li>
+	        				<li>Preço: '.$price.'</li>
+	        				<li>Grátis: '.$isFree.'</li>
+	        				<li>Tipo: '.$type.'</li>
+	        				<li>Descrição curta: '.$shortDescription.'</li>
+	        				<li>Sobre: '.$aboutGame.'</li>
+	        				<li>Desenvolvedores '.$developers.'</li>
+	        				<li>Loja: '.$store.'</li>
+	        				<li>Plataformas: '.$platforms.'</li>
+	        			</ul>'
+	        		?>
         		</div>
         	</div>
         </div>
@@ -82,12 +125,23 @@
         	<div class="container">
         		<div class="w-layout-grid project-details-grid" style= "text-align: left">
         			<h1>Requisitos</h1>
-        			<ul>
-                <li>CPU: </li>
-        				<li>GPU: </li>
-                <li>RAM: </li>
-        				<li>OS: </li>
-        			</ul>
+        			<?php
+        				echo'<h2>Windows</h2>
+		        			<ul>
+		                		<li>Mínimo: '.$requirements['Pc']->getMinimum().'</li>
+		                		<li>Recomendado: '.$requirements['Pc']->getMaximum().'</li>
+		        			</ul>
+		        		<h2>Mac</h2>
+		        			<ul>
+		                		<li>Mínimo: '.$requirements['Mac']->getMinimum().'</li>
+		                		<li>Recomendado: '.$requirements['Mac']->getMaximum().'</li>
+		        			</ul>
+		        		<h2>Linux</h2>
+		        			<ul>
+		                		<li>Mínimo: '.$requirements['Linux']->getMinimum().'</li>
+		                		<li>Recomendado: '.$requirements['Linux']->getMaximum().'</li>
+		        			</ul>'
+		        	?>
         		</div>
         	</div>
         </div>
@@ -98,7 +152,6 @@
           <div class="container">
             <div class="w-layout-grid project-details-grid" style= "text-align: left">
               <h1>Comentários</h1>
-
               <div>
               	<div class="btn-group">
               	  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -132,25 +185,22 @@
 
               <div class="list-group">
 
-                <a class="list-group-item list-group-item">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Nome do Caboclo</h5>
-                    <small class="text-muted">3 days ago</small>
-                  </div>
-                  <small>Recomendado </small>
-                  <p class="mb-1">Review lalalal bão demais </p>
-                  <small class="text-muted">Horas Registradas: 1258 horas</small>
-                </a>
 
-                <a class="list-group-item list-group-item">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">List group item heading</h5>
-                    <small class="text-muted">3 days ago</small>
-                  </div>
-                  <small>Recomendado </small>
-                  <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                  <small class="text-muted">Donec id elit non mi porta.</small>
-                </a>
+              	<?php 
+
+              		foreach ($controller2->findByPubId($GET['id']) as $comments) {
+              			echo '<a class="list-group-item list-group-item">
+				                  <div class="d-flex w-100 justify-content-between">
+				                    <h5 class="mb-1">'.$comments->getUsername().'</h5>
+				                    <small class="text-muted">'.$comments->getDate().'</small>
+				                  </div>
+				                  <small>'.$comments->getRecomendation().'</small>
+				                  <p class="mb-1">'.$comments->getReview().'</p>
+				                  <small class="text-muted">'.$comments->getHours().'</small>
+				                </a>'
+              		}
+
+              	?>
 
               </div>
             </div>
