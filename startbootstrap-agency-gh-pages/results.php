@@ -4,11 +4,43 @@ include "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Controller/PublicationController.
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/PublicationDao.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Publication.php";
 
+$pesquisa = false;
+
 if (isset($_POST)) {
 
     $controller = new PublicationController();
     $res = false;
 }
+
+if(isset($_POST['genero1'])){
+  $res = $controller->customSearch($S_POST['genero1'], null, null, null, null, null, null);
+}elseif(isset($S_POST['genero2'])){
+  $res = $controller->customSearch(null, $S_POST['genero2'], null, null, null, null, null);
+}else if(isset($S_POST['genero3'])){
+   $res = $controller->customSearch(null, null,  $S_POST['genero3'], null, null, null, null);
+}elseif(isset($S_POST['tipo_publicacao']))
+  $res = $controller->customSearch(null, null,  null, $S_POST['tipo_publicacao'], null, null, null);
+}elseif(isset($S_POST['dev'])){
+  $res = $controller->customSearch(null, null,  null, null,  $S_POST['dev'], null, null);
+}elseif(isset($S_POST['precoMinimo'])){
+  $res = $controller->customSearch(null, null,  null, null,  null, $S_POST['precoMinimo'], null);
+}elseif (isset($S_POST['precoMaximo'])) {
+  $res = $controller->customSearch(null, null,  null, null,  null, null, $S_POST['precoMaximo']);
+}elseif(isset($S_POST['pesquisaPrincipal'])){
+  $res = $controller->findGameName($S_POST['pesquisaPrincipal']);
+}
+
+if($res){
+
+  for(int $i=0; i<count($controller->getPublication); $i++){
+
+    echo "<td><center><a href='change.php?id="$controller->getPublication[$i]->getPublication()"'>Alterar</a></center></td>";
+  }
+}else{
+
+  echo "Busca não encontrada";
+}
+    
 
 ?>
 
