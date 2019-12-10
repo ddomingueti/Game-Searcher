@@ -99,7 +99,7 @@ if (isset($_POST)) {
                 <ul>
                 <?php
                     foreach ($controller->getPublication() as $publication) {
-                        echo '<li> <a href="game_result.php?id='.$publication->getPublicationId().'" class="list-group-item list-group-item-action list-group-item-light">'.$publication->getGame()->getName().'</a></li>';
+                        echo '<li> <a href="game_result.php?id='.$publication->getPublicationId().'" class="list-group-item list-group-item-action list-group-item-light">'.$publication->getGame()->getName().'-'.$publication->getStore()->getName().'</a></li>';
                     }
                 }
                 ?>
