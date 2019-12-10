@@ -11,16 +11,16 @@ if (isset($_POST)) {
     $controller = new PublicationController();
     $res = false;
 
-    $genero1 = isset($_POST['genero1']) ? $_POST['genero1'] : "";
-    $genero2 = isset($_POST['genero2']) ? $_POST['genero2'] : "";
-    $genero3 = isset($_POST['genero3']) ? $_POST['genero3'] : "";
-    $tipo_pub = isset($_POST['tipo_publicacao']) ? $_POST['tipo_publicacao'] : "";
-    $dev = isset($_POST['dev']) ? $_POST['dev'] : "";
-    $precoMin = isset($_POST['precoMinimo']) ? $_POST['precoMinimo'] : "";
-    $precoMax = isset($_POST['precoMaximo']) ? $_POST['precoMaximo'] : "";
-    $pesquisaPrincipal = isset($_POST['pesquisaPrincipal']) ? $_POST['pesquisaPrincipal'] : "";
+    $genero1 = isset($_POST['genero1']) && $_POST['genero1'] !== '' ? $_POST['genero1'] : null;
+    $genero2 = isset($_POST['genero2']) && $_POST['genero2'] !== ''? $_POST['genero2'] : null;
+    $genero3 = isset($_POST['genero3']) && $_POST['genero3'] !== ''? $_POST['genero3'] : null;
+    $tipo_pub = isset($_POST['tipo_publicacao']) && $_POST['tipo_publicacao'] !== ''? $_POST['tipo_publicacao'] : null;
+    $dev = isset($_POST['dev']) && $_POST['dev'] !== '' ? $_POST['dev'] : null;
+    $precoMin = isset($_POST['precoMinimo']) && $_POST['precoMinimo'] !== '' ? $_POST['precoMinimo'] : null;
+    $precoMax = isset($_POST['precoMaximo']) && $_POST['precoMaximo'] !== '' ? $_POST['precoMaximo'] : null;
+    $pesquisaPrincipal = isset($_POST['pesquisaPrincipal']) && $_POST['pesquisaPrincipal'] !== '' ? $_POST['pesquisaPrincipal'] : null;
 
-    if ($pesquisaPrincipal !== "") {
+    if ($pesquisaPrincipal !== null) {
         $res = $controller->findGameName($pesquisaPrincipal);
     } else {
         $res = $controller->customSearch($genero1, $genero2, $genero3, $tipo_pub, $dev, $precoMin, $precoMax);
@@ -69,7 +69,7 @@ if (isset($_POST)) {
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav text-uppercase ml-auto">
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" style="color: orange" href="index.html">Página Inicial</a>
+            <a class="nav-link js-scroll-trigger" style="color: orange" href="index.php">Página Inicial</a>
           </li>
           </li>
         </ul>
@@ -96,12 +96,14 @@ if (isset($_POST)) {
         		<div class="w-layout-grid project-details-grid" style= "text-align: left">
 
         		<div class="list-group">
+                <ul>
                 <?php
                     foreach ($controller->getPublication() as $publication) {
                         echo '<li> <a href="game_result.php?id='.$publication->getPublicationId().'" class="list-group-item list-group-item-action list-group-item-light">'.$publication->getGame()->getName().'</a></li>';
                     }
                 }
                 ?>
+                </ul>
         		</div>
 
             </div>

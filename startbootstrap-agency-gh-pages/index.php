@@ -110,7 +110,7 @@ $r = $controller->findVisitedPubs();
         <label class="input-text" >Tipo de publicação</label>
         <div class="input-group mb-3">
           <select name="tipo_publicacao" class="custom-select" id="inputGroupSelect01">
-            <option selected>Escolha</option>
+            <option selected value="">Escolha</option>
             <option value="game">Jogo</option>
             <option value="dlc">Dlc</option>
           </select>

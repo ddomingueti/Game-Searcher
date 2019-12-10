@@ -31,9 +31,10 @@ class PublicationDao {
     }
 
     public function findByGameName($gamename) {
-        $data = ['Data.1' => new MongoDB\BSON\Regex('/'.$gamename.'/')];
+        $data = array('Data.1' => new MongoDB\BSON\Regex($gamename, "i"));
+        $filter = array( 'sort' => array( 'OrderBy' => -1 ) );
         $query = new MongoDB\Driver\Query($data);
-        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query, $filter);
         $cursor = $cursor->toArray();
         return $this->cursorToPubList($cursor);
     }
@@ -55,9 +56,12 @@ class PublicationDao {
     }
 
     public function customQuery($data) {
-        $query = new MongoDB\Driver\Query($data);
+        $filter = array( 'sort' => array( 'OrderBy' => -1 ));
+
+        $query = new MongoDB\Driver\Query($data, $filter);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.publications', $query);
         $cursor = $cursor->toArray();
+        var_dump($cursor);
         return $this->cursorToPubList($cursor);
     }
 
