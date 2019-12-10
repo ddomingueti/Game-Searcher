@@ -4,6 +4,8 @@ include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/conexao.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Publication.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Comments.php";
 
+set_time_limit(20000);
+
 function addInfoSteam($path, $storeId) {
     $json = file_get_contents($path, true);
     $json = json_decode($json, true);
