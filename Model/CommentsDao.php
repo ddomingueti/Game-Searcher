@@ -75,8 +75,26 @@ class CommentsDao {
     }
 
     public function findByPubIdOld($id) {
-        $data = ["pub_id" => $id];
+        $data = ["pub_id" => $id, "recommendation" => "Recomendado"];
         $query = new MongoDB\Driver\Query($data, ['sort' => ['date'=>-1]]);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function findRecommended($id) {
+        $data = ["pub_id" => $id, "recommendation" => "Não Recomendado"];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }
+
+        public function findNotRecommended($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data);
         $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
         $cursor = $cursor->toArray();
 

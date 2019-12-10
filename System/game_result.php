@@ -7,6 +7,8 @@ include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Comments.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Controller/StoreController.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/Game-Searcher/Model/Store.php";
 
+$op = -1;
+
 if(isset($_GET)){
 
 	$controller = new PublicationController();
@@ -29,6 +31,7 @@ if(isset($_GET)){
 	$aboutGame = $controller->getPublication()->getGame()->getAboutGame();
 
 }
+
 
 
 ?>
@@ -154,31 +157,30 @@ if(isset($_GET)){
               <h1>Comentários</h1>
               <div>
               	<div class="btn-group">
-              	  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              	  <button type="submit" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               	    Lojas
               	  </button>
               	  <div class="dropdown-menu">
-              	    <a class="dropdown-item" href="#info">Steam</a>
-              	    <a class="dropdown-item" href="#info">GOG</a>
+              	    <a class="dropdown-item" href="#info" name="OP" value="0">Steam</a>
+              	    <a class="dropdown-item" href="#info" name="OP" value="1">GOG</a>
               	  </div>
               	</div>
               	<div class="btn-group">
-              	  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              	  <button type="submit" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               	    Relevância
               	  </button>
               	  <div class="dropdown-menu">
-              	    <a class="dropdown-item" href="#info">Recomendados (>3)</a>
-              	    <a class="dropdown-item" href="#info">Não Recomendados (<3)</a>
+              	    <a class="dropdown-item" href="#info" name="OP" value="2">Recomendados (>3)</a>
+              	    <a class="dropdown-item" href="#info" name="OP" value="3">Não Recomendados (<3)</a>
               	  </div>
               	</div>
               	<div class="btn-group">
-              	  <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              	  <button type="submit" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               	    Ordenar
               	  </button>
               	  <div class="dropdown-menu">
-              	    <a class="dropdown-item" href="#info" name="AR" value="0">Adicionados Recentemente</a>
-              	    <a class="dropdown-item" href="#info" name="MA" value="1">Mais Antigos</a>
-              	    <a class="dropdown-item" href="#info" name="HJ" value="2">Mais Horas Jogadas</a>
+              	    <a class="dropdown-item" href="#info" name="OP" value="4">Adicionados Recentemente</a>
+              	    <a class="dropdown-item" href="#info" name="OP" value="5">Mais Antigos</a>
               	  </div>
               	</div>
               </div>
@@ -188,8 +190,40 @@ if(isset($_GET)){
 
               	<?php 
 
-              		foreach ($controller2->findByPubId($GET['id']) as $comments) {
-              			echo '<a class="list-group-item list-group-item">
+              		$op = $_POST['OP'];
+
+              		if($op == -1){
+
+              			$comments = $controller2->findByPubId($GET['id']);
+
+              		} else if($op == 0){
+
+              			$comments = $controller2->findSteamComments($GET['id']);
+
+              		} else if($op == 1){
+
+              			$comments = $controller2->findGogComments($GET['id']);
+
+              		} else if($op == 2){
+
+              			$comments = $controller2->findRecommended($GET['id']);
+
+              		} else if($op == 3){
+
+              			$comments = $controller2->findNotRecommended($GET['id']);
+
+              		} else if($op == 4){
+
+              			$comments = $controller2->findByPubIdRecent($GET['id']);
+
+              		} else if($op == 5){
+
+              			$comments = $controller2->findByPubIdOld($GET['id']);
+
+              		}
+
+              		foreach ($comments) {
+              				echo '<a class="list-group-item list-group-item">
 				                  <div class="d-flex w-100 justify-content-between">
 				                    <h5 class="mb-1">'.$comments->getUsername().'</h5>
 				                    <small class="text-muted">'.$comments->getDate().'</small>
