@@ -126,8 +126,8 @@ $r = $controller->findVisitedPubs();
             	<div class="col-md-8">
                   <label class="input-text" >Preço Mínimo</label>
                 </div>
-            	<div class="col-md-8">
-              	    <input name="precoMinimo" type="text" class="form-control" placeholder="Apenas Números">
+            	<div class="col-md-10">
+              	    <input name="precoMinimo" type="text" class="form-control" placeholder="Números Sem Vìrgula e/ou Ponto">
                 </div>
             </div>
           </div>
@@ -136,8 +136,8 @@ $r = $controller->findVisitedPubs();
             	<div class="col-md-8">
             		<label class="input-text" >Preço Máximo</label>
           		</div>
-          		<div class="col-md-8">
-            		<input name="precoMaximo" type="text" class="form-control" placeholder="Apenas Números">
+          		<div class="col-md-10">
+            		<input name="precoMaximo" type="text" class="form-control" placeholder="Números Sem Vìrgula e/ou Ponto">
             	</div>
             </div>
           </div>
