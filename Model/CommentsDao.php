@@ -101,4 +101,67 @@ class CommentsDao {
         }
         return $final_comments; 
     }
+
+   /* public function findSteamComments($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function findGogComments($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }*/
+
+    public function findByPubIdRecent($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data, 'sort' => ['date'=>1]);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function findByPubIdOld($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data, 'sort' => ['date'=>-1]);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'comments', $query);
+        $cursor = $cursor->toArray();
+
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function sortByHours($id) {
+        $data = ["pub_id" => $id];
+        $query = new MongoDB\Driver\Query($data, 'sort' => ['hours'=>1]);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
+        $cursor = $cursor->toArray();
+        
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function FindRecommended($id) {
+        $data = ["pub_id" => $id, "recommendation" => "Recomendado"];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
+        $cursor = $cursor->toArray();
+        
+        return $this->cursorToCommentList($cursor);
+    }
+
+    public function FindNotRecommended($id) {
+        $data = ["pub_id" => $id, "recommendation" => "Não Recomendado"];
+        $query = new MongoDB\Driver\Query($data);
+        $cursor = Conexao::getInstance()->getManager()->executeQuery(Conexao::getDbName().'.comments', $query);
+        $cursor = $cursor->toArray();
+        
+        return $this->cursorToCommentList($cursor);
+    }
 }
